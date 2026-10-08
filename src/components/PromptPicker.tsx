@@ -84,6 +84,7 @@ export function PromptPicker() {
   const [config, setConfig] = useState<Config>(initial.config);
   const [userPresets, setUserPresets] = useState<Preset[]>(initial.presets);
   const [active, setActive] = useState<SectionId>("context");
+  const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("configure");
   const [theme, setTheme] = useState<Theme>(() =>
     document.documentElement.dataset.theme === "light" ? "light" : "dark",
@@ -105,12 +106,16 @@ export function PromptPicker() {
     setToast({ id: Date.now(), message, tone });
   }, []);
 
-  // Persist on every change. A failed write (quota, revoked permission) is reported once.
+  // Persist on every change. Keep retrying after a failed write (quota, revoked
+  // permission), but only warn once per run of failures.
   const saveFailed = useRef(false);
   useEffect(() => {
     const store = storeRef.current;
-    if (!store || saveFailed.current) return;
-    if (!saveConfig(store, config)) {
+    if (!store) return;
+    const ok = saveConfig(store, config);
+    if (ok) {
+      saveFailed.current = false;
+    } else if (!saveFailed.current) {
       saveFailed.current = true;
       queueMicrotask(() =>
         notify(
@@ -162,6 +167,7 @@ export function PromptPicker() {
   const goToSection = useCallback(
     (id: SectionId, opts: { scroll?: boolean } = {}) => {
       setConfig((c) => (c.mode === "brief" ? c : { ...c, mode: "brief" }));
+      setQuery(""); // search results would otherwise hide the target section
       setActive(id);
       switchView("configure");
       if (opts.scroll !== false) scrollToTop();
@@ -392,6 +398,8 @@ export function PromptPicker() {
                 sections={sections}
                 active={active}
                 onSelect={(id) => goToSection(id)}
+                query={query}
+                onQueryChange={setQuery}
               />
             ) : (
               <RevisionEditor />

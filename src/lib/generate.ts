@@ -101,10 +101,56 @@ function stripEnd(s: string): string {
   return clean(s).replace(/[.!]+$/, "");
 }
 
-/** Lowercase a leading word unless it looks like an acronym or proper noun run. */
-function lowerFirst(s: string): string {
+// Leading words that are safe to lowercase mid-sentence. Anything else (proper
+// nouns, component names like "DataTable") keeps the user's casing.
+const COMMON_LEADING_WORDS = new Set([
+  "a",
+  "an",
+  "the",
+  "this",
+  "that",
+  "these",
+  "those",
+  "its",
+  "their",
+  "our",
+  "too",
+  "very",
+  "no",
+  "not",
+  "some",
+  "all",
+  "any",
+  "each",
+  "every",
+  "more",
+  "less",
+  "most",
+  "few",
+  "many",
+  "much",
+  "several",
+  "only",
+  "inconsistent",
+  "low",
+  "weak",
+  "poor",
+  "unclear",
+  "missing",
+  "excessive",
+  "overlapping",
+  "competing",
+  "cramped",
+]);
+
+/** Lowercase the first letter only when the leading word is a common word. */
+export function lowerFirst(s: string): string {
   const t = clean(s);
-  if (t.length > 1 && /[A-Z]/.test(t[0]) && /[a-z]/.test(t[1])) {
+  const first = t.split(/[\s,;:]/)[0] ?? "";
+  if (
+    /^[A-Z][a-z]*$/.test(first) &&
+    COMMON_LEADING_WORDS.has(first.toLowerCase())
+  ) {
     return t[0].toLowerCase() + t.slice(1);
   }
   return t;
@@ -151,10 +197,12 @@ class Builder {
   add(heading: OutputHeading, text: string, sub?: string[]) {
     const t = clean(text);
     if (!t) return;
-    const key = dedupeKey(t);
+    const subs = sub?.map(clean).filter(Boolean);
+    // Sub-items are part of identity: two references with the same name but
+    // different notes are distinct items.
+    const key = dedupeKey([t, ...(subs ?? [])].join(" "));
     if (!key || this.seen.has(key)) return;
     this.seen.add(key);
-    const subs = sub?.map(clean).filter(Boolean);
     const list = this.sections.get(heading) ?? [];
     list.push(subs?.length ? { text: t, sub: subs } : { text: t });
     this.sections.set(heading, list);
@@ -206,11 +254,17 @@ function taskLead(config: Config): string {
   return sentence(lead);
 }
 
-function preserveItems(config: Config, ex: Exclusions): string[] {
+/** Preserve fields with unresolved conflicting terms removed. */
+function effectivePreserve(config: Config, ex: Exclusions): Config["preserve"] {
   const p = { ...config.preserve };
   for (const { term, fields } of ex.terms) {
     for (const f of fields) p[f] = removeTerm(p[f], term);
   }
+  return p;
+}
+
+function preserveItems(config: Config, ex: Exclusions): string[] {
+  const p = effectivePreserve(config, ex);
   const lines: [PreserveKey, string][] = [
     ["functionality", "Preserve this functionality exactly as it works today"],
     ["components", "Keep these components unchanged"],
@@ -271,7 +325,7 @@ export function deriveCriteria(
       text: sentence(`${joinList(states)} states are specified`),
     });
   }
-  const p = config.preserve;
+  const p = effectivePreserve(config, exclusions);
   if (p.functionality.trim())
     out.push({
       id: "preserve:functionality",

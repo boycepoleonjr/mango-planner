@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { AlertTriangle, ArrowLeft, ArrowRight, Search, X } from "lucide-react";
 import { deriveCriteria } from "@/lib/generate";
 import { GROUPS, groupsForSection } from "@/lib/options";
@@ -211,13 +211,17 @@ export function Workspace({
   sections,
   active,
   onSelect,
+  query,
+  onQueryChange: setQuery,
 }: {
   sections: SectionMeta[];
   active: SectionId;
   onSelect: (id: SectionId) => void;
+  /** Owned by the parent so any navigation can clear it. */
+  query: string;
+  onQueryChange: (q: string) => void;
 }) {
   const { conflicts } = useEditor();
-  const [query, setQuery] = useState("");
   const index = sections.findIndex((s) => s.id === active);
   const meta = sections[index] ?? sections[0];
   const prev = sections[index - 1];

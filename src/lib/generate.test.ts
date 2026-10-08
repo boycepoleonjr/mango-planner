@@ -281,6 +281,39 @@ describe("acceptance criteria", () => {
   });
 });
 
+describe("review regressions", () => {
+  it("keeps the casing of names and components in revision fields", () => {
+    const text = revisionParagraph({
+      id: "1",
+      element: "table",
+      problem: "Stripe checkout errors hidden below the fold",
+      change: "React Query cache keys to include the filter",
+      preserve: "DataTable sorting",
+    });
+    expect(text).toContain("has Stripe checkout errors");
+    expect(text).toContain("Change React Query cache keys");
+    expect(text).toContain("Preserve DataTable sorting.");
+  });
+
+  it("omits preserve criteria whose items were excluded by a conflict", () => {
+    const c = blank();
+    c.preserve.components = "Header";
+    c.preserve.mayChange = "header";
+    expect(generatePrompt(c).text).not.toContain("Components listed under");
+  });
+
+  it("keeps same-named references that have different notes", () => {
+    const c = blank();
+    c.references = [
+      { id: "a", name: "Linear", borrow: "command menu", avoid: "" },
+      { id: "b", name: "Linear", borrow: "keyboard shortcuts", avoid: "" },
+    ];
+    const text = generatePrompt(c).text;
+    expect(text).toContain("Borrow: command menu.");
+    expect(text).toContain("Borrow: keyboard shortcuts.");
+  });
+});
+
 describe("targeted revision mode", () => {
   it("uses the scoped feedback format", () => {
     const text = revisionParagraph({

@@ -83,10 +83,13 @@ export function PreviewPane({
   }
 
   function onExport() {
-    const base = slugify(
-      config.context.projectName || (isBrief ? "design-brief" : "revision"),
-    );
-    const filename = `${base}${isBrief ? "" : "-revision"}.md`;
+    const name = config.context.projectName.trim();
+    const base = name
+      ? `${slugify(name)}${isBrief ? "" : "-revision"}`
+      : isBrief
+        ? "design-brief"
+        : "revision";
+    const filename = `${base}.md`;
     downloadMarkdown(filename, text);
     notify(`Exported ${filename}`);
   }
