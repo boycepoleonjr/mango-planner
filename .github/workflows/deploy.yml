@@ -1,8 +1,8 @@
 name: Deploy
 
-# Publishes the static export to Cloudflare Pages whenever main changes
-# (including PR merges). The same checks as CI run first, so a red build
-# never reaches production.
+# Publishes the static export to Cloudflare (Workers static assets) whenever
+# main changes, including PR merges. The same checks as CI run first, so a red
+# build never reaches production.
 
 on:
   push:
@@ -15,17 +15,13 @@ concurrency:
 
 permissions:
   contents: read
-  deployments: write
-
-env:
-  PAGES_PROJECT: mango-planner
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://${{ env.PAGES_PROJECT }}.pages.dev
+      url: ${{ steps.deploy.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v7
 
@@ -42,11 +38,12 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - name: Deploy to Cloudflare Pages
+      # Uses wrangler.jsonc: uploads out/ as the Worker's static assets.
+      - name: Deploy to Cloudflare
+        id: deploy
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4.149.0"
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy out --project-name=${{ env.PAGES_PROJECT }} --branch=main --commit-hash=${{ github.sha }}
+          command: deploy
