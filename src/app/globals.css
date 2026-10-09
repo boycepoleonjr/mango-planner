@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Dark is the default theme; light is opt-in via data-theme="light". */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d0e10;
+  --panel: #121316;
+  --raised: #181a1e;
+  --hover: #1e2025;
+  --line: #262a2f;
+  --line-strong: #383c43;
+  --fg: #e7e8ea;
+  --muted: #a3a8b0;
+  --faint: #80858e;
+  --accent: #f5a524;
+  --accent-fg: #1a1204;
+  --accent-ink: #f7b447;
+  --accent-soft: rgb(245 165 36 / 0.1);
+  --accent-line: rgb(245 165 36 / 0.45);
+  --warn: #f2836f;
+  --warn-soft: rgb(242 131 111 / 0.1);
+  --warn-line: rgb(242 131 111 / 0.45);
+  --ok: #5cc898;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eceef0;
+  --panel: #f6f7f8;
+  --raised: #ffffff;
+  --hover: #eef0f2;
+  --line: #d8dce1;
+  --line-strong: #bfc5cc;
+  --fg: #16181b;
+  --muted: #4d535b;
+  --faint: #656b74;
+  --accent: #f5a524;
+  --accent-fg: #1a1204;
+  --accent-ink: #9a5800;
+  --accent-soft: rgb(245 165 36 / 0.14);
+  --accent-line: rgb(190 120 0 / 0.5);
+  --warn: #b83a26;
+  --warn-soft: rgb(184 58 38 / 0.07);
+  --warn-line: rgb(184 58 38 / 0.4);
+  --ok: #1d7a50;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-hover: var(--hover);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-line: var(--warn-line);
+  --color-ok: var(--ok);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* The search field has its own labelled clear button. */
+input[type="search"]::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+/* Thin, quiet scrollbars for the workspace columns. */
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
