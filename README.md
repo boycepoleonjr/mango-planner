@@ -55,8 +55,26 @@ pnpm build        # static export to out/
 pnpm preview      # serve out/ locally
 ```
 
-`pnpm build` produces a fully static site in `out/` that you can host on any static host
-(Cloudflare Pages, GitHub Pages, Netlify, and so on). There is no backend.
+`pnpm build` produces a fully static site in `out/` that you can host on any static host.
+There is no backend.
+
+## Deployment
+
+Live at **https://mango-planner.boycepro-account.workers.dev**, served as Cloudflare Workers
+static assets (configured in `wrangler.jsonc`).
+
+Every push to `main`, including PR merges, runs `.github/workflows/deploy.yml`. It runs
+lint, typecheck, the tests, and the build, then publishes `out/` with `wrangler deploy`. The
+workflow needs two repository secrets:
+
+- `CLOUDFLARE_API_TOKEN`: an API token with **Account › Workers Scripts › Edit**
+- `CLOUDFLARE_ACCOUNT_ID`: the Cloudflare account ID
+
+To deploy by hand:
+
+```bash
+pnpm build && pnpm exec wrangler deploy
+```
 
 ## Project structure
 
