@@ -1,0 +1,7 @@
+{
+  "files": {
+    ".github/workflows/claude-code-review.yml": "2d96d1854979228a"
+  },
+  "profile": "node-worker",
+  "version": "1.2.0"
+}

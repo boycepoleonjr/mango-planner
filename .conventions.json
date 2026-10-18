@@ -1,0 +1,16 @@
+{
+  "commands": {
+    "audit": "pnpm audit --audit-level high",
+    "build": "pnpm build",
+    "install": "pnpm install --frozen-lockfile",
+    "lint": "pnpm lint",
+    "test": "pnpm test",
+    "typecheck": "pnpm typecheck"
+  },
+  "profile": "node-worker",
+  "project": {
+    "name": "mango-planner",
+    "summary": "TODO: one paragraph on what this project is and who it serves."
+  },
+  "skip": []
+}

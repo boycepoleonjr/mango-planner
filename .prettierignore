@@ -1,3 +1,4 @@
 pnpm-lock.yaml
 .next
 out
+.github/workflows/claude-code-review.yml
