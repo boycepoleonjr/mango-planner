@@ -1,0 +1,27 @@
+# Synced from boycepoleonjr/conventions v1.3.0. Edit there, or add "dependabot" to "skip" in .conventions.json.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+      major:
+        applies-to: version-updates
+        update-types: ["major"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+      major:
+        applies-to: version-updates
+        update-types: ["major"]
