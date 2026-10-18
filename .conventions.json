@@ -2,6 +2,7 @@
   "commands": {
     "audit": "pnpm audit --audit-level high",
     "build": "pnpm build",
+    "format": "pnpm format:check",
     "install": "pnpm install --frozen-lockfile",
     "lint": "pnpm lint",
     "test": "pnpm test",
@@ -10,7 +11,7 @@
   "profile": "node-worker",
   "project": {
     "name": "mango-planner",
-    "summary": "TODO: one paragraph on what this project is and who it serves."
+    "summary": "Mango Planner is a client-side UI/UX prompt picker: people choose design preferences in plain language and it generates a deterministic, actionable brief for LLM design and coding agents. Configuration and presets live in the browser's localStorage; there is no backend."
   },
   "skip": []
 }
