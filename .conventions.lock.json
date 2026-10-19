@@ -3,13 +3,13 @@
     ".claude/skills/dependency-update/SKILL.md": "adf4b1f988a8583d",
     ".claude/skills/fix-with-regression-tests/SKILL.md": "348b4366f1c1dbcb",
     ".claude/skills/open-pr/SKILL.md": "f6b8cb5222633085",
-    ".github/dependabot.yml": "facbb7bdeb1390d2",
-    ".github/pull_request_template.md": "f319778207728bc1",
-    ".github/workflows/claude-code-review.yml": "42a1702b556b3c22",
-    ".github/workflows/conventions-check.yml": "e312335ce289620a",
-    "AGENTS.md": "6ee3bab207576b3f",
-    "CLAUDE.md": "3c6f49d79e2422e6"
+    ".github/dependabot.yml": "f717878498d8913c",
+    ".github/pull_request_template.md": "18a08b2d2b08562f",
+    ".github/workflows/claude-code-review.yml": "77b9ef6ca9d44566",
+    ".github/workflows/conventions-check.yml": "302d4154e4b5fc1d",
+    "AGENTS.md": "aaa7279e3dac1cc6",
+    "CLAUDE.md": "5288a96a7600cdf8"
   },
   "profile": "node-worker",
-  "version": "1.3.0"
+  "version": "1.3.1"
 }
