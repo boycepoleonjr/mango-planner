@@ -1,4 +1,4 @@
-# Synced from boycepoleonjr/conventions v1.3.1. Edit there, or add "dependabot" to "skip" in .conventions.json.
+# Synced from boycepoleonjr/conventions v1.4.0. Edit there, or add "dependabot" to "skip" in .conventions.json.
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    # Checkout is held at v4.4.0 on purpose (see claude.yml, claude-code-review.yml).
+    # Checkout is held at v4.4.0 on purpose (see the Claude workflows).
     ignore:
       - dependency-name: "actions/checkout"
         update-types: ["version-update:semver-major"]
