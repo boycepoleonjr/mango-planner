@@ -1,6 +1,6 @@
 <!-- conventions:begin agents-core -->
 
-## Shared rules (conventions v1.3.1)
+## Shared rules (conventions v1.4.0)
 
 - Read this file, the README, `package.json` or equivalent, and `.github/workflows/` before changing code. Use the repo's real commands.
 - One branch per task (`<type>/<slug>`), Conventional Commits, minimal diffs: no refactors or unrelated edits in a fix PR.
@@ -10,7 +10,7 @@
 - Dependency changes are declared openly in the manifest. Never hide a version change in `overrides` or `resolutions` while the manifest claims a different range. See `.claude/skills/dependency-update`.
 - Non-trivial work gets a plan in `docs/specs/` first. End each session with a handoff in `docs/handoffs/YYYY-MM-DD-<topic>.md`.
 - Never commit secrets, real customer data or `.env` files. Use synthetic data in tests and fixtures.
-- Standard: https://github.com/boycepoleonjr/conventions/blob/v1.3.1/STANDARD.md
+- Standard: https://github.com/boycepoleonjr/conventions/blob/v1.4.0/STANDARD.md
 
 <!-- conventions:end agents-core -->
 
