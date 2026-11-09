@@ -1,15 +1,16 @@
 {
   "files": {
-    ".claude/skills/dependency-update/SKILL.md": "adf4b1f988a8583d",
+    ".claude/skills/dependency-update/SKILL.md": "4bafcf9e0850a31b",
     ".claude/skills/fix-with-regression-tests/SKILL.md": "348b4366f1c1dbcb",
     ".claude/skills/open-pr/SKILL.md": "f6b8cb5222633085",
-    ".github/dependabot.yml": "c12fd9dd12701982",
-    ".github/pull_request_template.md": "3af0a4e4df957b5c",
-    ".github/workflows/claude-code-review.yml": "77b9ef6ca9d44566",
-    ".github/workflows/conventions-check.yml": "302d4154e4b5fc1d",
-    "AGENTS.md": "faedc51b1781ee5e",
+    ".github/dependabot.yml": "3f78de80eacf588f",
+    ".github/pull_request_template.md": "06299db8a3def689",
+    ".github/workflows/claude-code-review.yml": "ca8853478fecbe1b",
+    ".github/workflows/conventions-check.yml": "4ccba11525e5fd55",
+    ".github/workflows/deploy-secrets-lint.yml": "6d40e96ce48c0567",
+    "AGENTS.md": "b7536408bb86865e",
     "CLAUDE.md": "5288a96a7600cdf8"
   },
   "profile": "node-worker",
-  "version": "1.4.0"
+  "version": "1.7.0"
 }

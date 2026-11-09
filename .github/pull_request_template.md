@@ -1,4 +1,4 @@
-<!-- Synced from boycepoleonjr/conventions v1.4.0. Edit there, not here. -->
+<!-- Synced from boycepoleonjr/conventions v1.7.0. Edit there, not here. -->
 
 ## What
 
