@@ -2,9 +2,12 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-// deploy.yml passes wranglerVersion to cloudflare/wrangler-action, independent
-// of package.json. If the two drift, `pnpm audit` can pass for the lockfile
-// while production deploys with a different (possibly vulnerable) CLI.
+// The wranglerVersion input in deploy.yml is separate from package.json.
+// cloudflare/wrangler-action reuses the lockfile CLI only when the input equals
+// it; otherwise it runs `pnpm add wrangler@<input>` in the repo (see
+// src/wranglerAction.ts L90-L176 at cloudflare/wrangler-action@953926a). If the
+// two drift, `pnpm audit` can pass for the lockfile while production deploys
+// with a different (possibly vulnerable) CLI.
 
 function read(path: string): string {
   return readFileSync(

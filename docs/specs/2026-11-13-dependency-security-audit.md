@@ -15,14 +15,22 @@ Scope A, the repo lockfile (`pnpm audit`, `pnpm audit --prod`):
 - `pnpm audit --prod`: 0 findings, exit 0.
 - The lockfile has `wrangler@4.158.0` and `undici@7.30.1` (Dependabot #21). `braces@3.0.3` is still locked but no longer flagged, so the old "braces" note in `AGENTS.md` is stale.
 
-Scope B, the Wrangler CLI that `deploy.yml` actually runs. It passes `wranglerVersion: "4.149.0"` to `cloudflare/wrangler-action@v4`, independent of `package.json`. I resolved each version in an empty temporary directory with `pnpm add wrangler@<v>` and audited it:
+Scope B, the Wrangler CLI that `deploy.yml` actually runs. It passes `wranglerVersion: "4.149.0"` to `cloudflare/wrangler-action@v4`. That input is separate from `package.json`, but the install is not necessarily separate. I read the action at commit `953926a2e2182532811c01a25e53647d93bf07c0`, which is what `v4` resolved to on 2026-11-13 ([`src/wranglerAction.ts` L90-L176](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/src/wranglerAction.ts#L90-L176), [`src/packageManagers.ts` L21-L46](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/src/packageManagers.ts#L21-L46)):
 
-| Deploy CLI                      | undici | High | Moderate | `--audit-level high` exit |
-| ------------------------------- | ------ | ---- | -------- | ------------------------- |
-| 4.149.0 (current `deploy.yml`)  | 7.29.1 | 4    | 4        | 1                         |
-| 4.158.0 (manifest and lockfile) | 7.30.1 | 0    | 0        | 0                         |
+- It detects pnpm from `pnpm-lock.yaml` and runs `pnpm exec wrangler --version` in the repo.
+- If the input is an exact version equal to the installed one, it reuses the lockfile CLI and installs nothing.
+- On a mismatch it runs `pnpm add wrangler@<input>` in the same repo, not in a separate directory.
 
-The lockfile audit is green while the production deploy runs a CLI with 4 high advisories. That is the exposure.
+So the old `4.149.0` input replaced the runner's locked 4.158.0 with 4.149.0 before deploying. With `4.158.0` the versions match and the audited lockfile CLI is used. I confirmed this by simulating it in a scratch copy of the repo (`pnpm install --frozen-lockfile`, then `pnpm add wrangler@4.149.0`) and auditing the result. The Moderate column includes the known minimatch finding.
+
+| Deploy input  | CLI that runs                              | undici | High | Moderate | `--audit-level high` exit |
+| ------------- | ------------------------------------------ | ------ | ---- | -------- | ------------------------- |
+| 4.149.0 (old) | 4.149.0, after `pnpm add` replaces 4.158.0 | 7.29.1 | 4    | 5        | 1                         |
+| 4.158.0 (new) | 4.158.0 from the lockfile, no install      | 7.30.1 | 0    | 1        | 0                         |
+
+Resolving each version alone in an empty temporary directory gave the same split for the CLI by itself: 4.149.0 has 4 high and 4 moderate (undici 7.29.1), 4.158.0 has none.
+
+The lockfile audit was green, but the action downgraded the runner's CLI to a version with 4 high advisories before deploying. That is the exposure.
 
 ## Non-goals
 

@@ -42,14 +42,18 @@ The new test failed before the `deploy.yml` edit (expected `4.158.0`, got `4.149
 
 The smoke served `out/` with a throwaway static server. On both viewports it typed a project name, reloaded and saw it restored, saved a preset, reloaded and saw it kept in `localStorage`, and saw no page errors. Prompt generation is covered only by the unit tests, not the smoke.
 
-### Deploy CLI audit (separate from the lockfile)
+### Deploy CLI audit (input is separate, install is not)
 
-I resolved each Wrangler version in an empty temporary directory with `pnpm add wrangler@<v>` and ran `pnpm audit` there. This assumes the action installs the requested exact version and resolves its dependencies fresh; I did not read the action's install code.
+The `wranglerVersion` input is separate from `package.json`, but the install is not necessarily separate. In `cloudflare/wrangler-action` at `953926a2e2182532811c01a25e53647d93bf07c0` (what `v4` resolved to on 2026-11-13; [`wranglerAction.ts` L90-L176](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/src/wranglerAction.ts#L90-L176), [`packageManagers.ts` L21-L46](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/src/packageManagers.ts#L21-L46)), the action detects pnpm and runs `pnpm exec wrangler --version` in the repo. An exact input equal to the installed version reuses the lockfile CLI with no install. A mismatch runs `pnpm add wrangler@<input>` in the repo.
 
-| Deploy CLI                    | undici | Findings           | `--audit-level high` exit |
-| ----------------------------- | ------ | ------------------ | ------------------------- |
-| 4.149.0 (before, from `main`) | 7.29.1 | 4 high, 4 moderate | 1                         |
-| 4.158.0 (after)               | 7.30.1 | none               | 0                         |
+So the old `4.149.0` input replaced the runner's locked 4.158.0 with 4.149.0 before deploying, and `4.158.0` now uses the audited lockfile CLI. I simulated the old behaviour in a scratch copy of the repo (`pnpm install --frozen-lockfile`, then `pnpm add wrangler@4.149.0`) and ran `pnpm audit` there. The Moderate count includes the known minimatch finding.
+
+| Deploy input  | CLI that runs                              | undici | High | Moderate | `--audit-level high` exit |
+| ------------- | ------------------------------------------ | ------ | ---- | -------- | ------------------------- |
+| 4.149.0 (old) | 4.149.0, after `pnpm add` replaces 4.158.0 | 7.29.1 | 4    | 5        | 1                         |
+| 4.158.0 (new) | 4.158.0 from the lockfile, no install      | 7.30.1 | 0    | 1        | 0                         |
+
+Resolving each version alone in an empty temporary directory gave the same split for the CLI by itself: 4.149.0 has 4 high and 4 moderate, 4.158.0 has none.
 
 The 4 high advisories on 4.149.0 were GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx and GHSA-qrxm-fqhp-jwvm. All are patched in undici `>=7.30.1`.
 
