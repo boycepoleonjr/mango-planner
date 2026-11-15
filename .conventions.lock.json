@@ -2,15 +2,18 @@
   "files": {
     ".claude/skills/dependency-update/SKILL.md": "4bafcf9e0850a31b",
     ".claude/skills/fix-with-regression-tests/SKILL.md": "348b4366f1c1dbcb",
-    ".claude/skills/open-pr/SKILL.md": "f6b8cb5222633085",
-    ".github/dependabot.yml": "3f78de80eacf588f",
-    ".github/pull_request_template.md": "06299db8a3def689",
-    ".github/workflows/claude-code-review.yml": "ca8853478fecbe1b",
-    ".github/workflows/conventions-check.yml": "4ccba11525e5fd55",
-    ".github/workflows/deploy-secrets-lint.yml": "6d40e96ce48c0567",
-    "AGENTS.md": "b7536408bb86865e",
+    ".claude/skills/open-pr/SKILL.md": "6e4693febb68f3c6",
+    ".github/dependabot.yml": "08d4ef4ebe8baa12",
+    ".github/pull_request_template.md": "78dacf01280363cb",
+    ".github/workflows/ai-attribution-check.yml": "626cb5cb5221a5b6",
+    ".github/workflows/ai-attribution-scrub.yml": "f9fa3c05e0891378",
+    ".github/workflows/claude-code-review.yml": "4ad63cfbd88b92ac",
+    ".github/workflows/conventions-check.yml": "a845f8ac8d637253",
+    ".github/workflows/conventions-sync-check.yml": "ce337a4d44c6250a",
+    ".github/workflows/deploy-secrets-lint.yml": "74bfe4ad38628cdd",
+    "AGENTS.md": "6706c5c26cf9295b",
     "CLAUDE.md": "5288a96a7600cdf8"
   },
   "profile": "node-worker",
-  "version": "1.7.0"
+  "version": "1.9.0"
 }
