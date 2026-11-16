@@ -1,4 +1,4 @@
-# Synced from boycepoleonjr/conventions v1.9.2. Edit there, or add "dependabot" to "skip" in .conventions.json.
+# Synced from boycepoleonjr/conventions v1.9.3. Edit there, or add "dependabot" to "skip" in .conventions.json.
 version: 2
 updates:
   - package-ecosystem: "npm"
